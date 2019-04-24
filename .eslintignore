@@ -1,0 +1,4 @@
+node_modules
+.next
+serviceWorker.js
+*.test.js
