@@ -22,11 +22,8 @@ axiosInstance.interceptors.request.use(
 
 // Function that will be called to refresh authorization
 const refreshAuthLogic = () => authService.refreshToken();
-const onRetry = requestConfig => {
-  console.log(requestConfig, 'aaaaaaaaaaaaaaaaa');
-};
 
 // Instantiate the interceptor (you can chain it as it returns the axios instance)
-createAuthRefreshInterceptor(axiosInstance, refreshAuthLogic, { onRetry });
+createAuthRefreshInterceptor(axiosInstance, refreshAuthLogic);
 
 export default axiosInstance;
