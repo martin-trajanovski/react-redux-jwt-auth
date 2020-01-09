@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { userActions } from '../actions';
+import { authActions } from '../actions';
 
 class RegisterPage extends React.Component {
   constructor(props) {
@@ -14,7 +14,8 @@ class RegisterPage extends React.Component {
         firstName: '',
         lastName: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       },
       submitted: false
     };
@@ -39,7 +40,13 @@ class RegisterPage extends React.Component {
 
     this.setState({ submitted: true });
     const { user } = this.state;
-    if (user.firstName && user.lastName && user.email && user.password) {
+    if (
+      user.firstName &&
+      user.lastName &&
+      user.email &&
+      user.password &&
+      user.confirmPassword
+    ) {
       this.props.registerUser(user);
     }
   }
@@ -48,7 +55,7 @@ class RegisterPage extends React.Component {
     const { registering } = this.props;
     const { user, submitted } = this.state;
     return (
-      <div className="col-md-6 col-md-offset-3">
+      <div className="col-md-6 offset-md-3">
         <h2>Register</h2>
         <form name="form" onSubmit={this.handleSubmit}>
           <div
@@ -119,6 +126,24 @@ class RegisterPage extends React.Component {
               <div className="help-block">Password is required</div>
             )}
           </div>
+          <div
+            className={
+              'form-group' +
+              (submitted && !user.confirmPassword ? ' has-error' : '')
+            }
+          >
+            <label htmlFor="confirmPassword">Confirm password</label>
+            <input
+              type="password"
+              className="form-control"
+              name="confirmPassword"
+              value={user.confirmPassword}
+              onChange={this.handleChange}
+            />
+            {submitted && !user.confirmPassword && (
+              <div className="help-block">Confirm password is required</div>
+            )}
+          </div>
           <div className="form-group">
             <button className="btn btn-primary">Register</button>
             {registering && (
@@ -151,7 +176,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    registerUser: user => dispatch(userActions.register(user))
+    registerUser: user => dispatch(authActions.register(user))
   };
 };
 

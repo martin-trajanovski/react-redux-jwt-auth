@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { userActions } from '../actions';
+import { authActions } from '../actions';
 
 class HomePage extends React.Component {
   componentDidMount() {
@@ -91,7 +92,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getAllUsers: () => dispatch(userActions.getAll()),
     removeUser: id => dispatch(userActions.delete(id)),
-    logoutUser: () => dispatch(userActions.logout())
+    logoutUser: () => dispatch(authActions.logout())
   };
 };
 

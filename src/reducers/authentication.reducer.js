@@ -1,10 +1,11 @@
-import { userConstants } from '../constants';
+import { authConstants } from '../constants';
 
 let user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
   ? {
       loggedIn: true,
       user,
+      error: '',
       pendingRefreshingToken: null,
       tokenIsValid: null
     }
@@ -12,44 +13,51 @@ const initialState = user
 
 export function authentication(state = initialState, action) {
   switch (action.type) {
-    case userConstants.LOGIN_REQUEST:
+    case authConstants.LOGIN_REQUEST:
       return {
         ...state,
         loggingIn: true,
         user: action.user
       };
-    case userConstants.LOGIN_SUCCESS:
+    case authConstants.LOGIN_SUCCESS:
       return {
         ...state,
+        error: '',
         loggedIn: true,
         loggingIn: false,
         user: action.user
       };
-    case userConstants.LOGIN_FAILURE:
+    case authConstants.LOGIN_FAILURE:
       return {
         ...state,
+        error: action.error.error,
         loggingIn: false,
         loggedIn: false,
         loggingOut: false
       };
-    case userConstants.LOGOUT_REQUEST:
+    case authConstants.CLEAR_AUTH_ERRORS:
+      return {
+        ...state,
+        error: ''
+      };
+    case authConstants.LOGOUT_REQUEST:
       return {
         ...state,
         loggingOut: true
       };
-    case userConstants.LOGOUT:
+    case authConstants.LOGOUT:
       return {
         ...state,
         loggedIn: false,
         loggingOut: false
       };
-    case userConstants.REFRESHING_TOKEN:
+    case authConstants.REFRESHING_TOKEN:
       return {
         ...state,
         pendingRefreshingToken: true,
         tokenIsValid: false
       };
-    case userConstants.TOKEN_REFRESHED:
+    case authConstants.TOKEN_REFRESHED:
       return {
         ...state,
         pendingRefreshingToken: null,

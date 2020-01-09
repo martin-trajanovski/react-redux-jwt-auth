@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { userActions } from '../actions';
+import { authActions } from '../actions';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -35,11 +35,16 @@ class LoginPage extends React.Component {
 
     if (email && password) {
       this.props.loginUser(email, password);
+
+      setTimeout(() => {
+        this.props.clearErrors();
+      }, 2000);
     }
   }
 
   render() {
-    const { loggingIn } = this.props;
+    const { loggingIn, error } = this.props;
+
     const { email, password, submitted } = this.state;
     return (
       <div className="col-md-6 offset-md-3">
@@ -89,6 +94,7 @@ class LoginPage extends React.Component {
               Register
             </Link>
           </div>
+          {error && <span className="text-danger">ERROR: {error}</span>}
         </form>
       </div>
     );
@@ -98,21 +104,26 @@ class LoginPage extends React.Component {
 LoginPage.propTypes = {
   loggingIn: PropTypes.bool,
   loginUser: PropTypes.func,
-  logoutUser: PropTypes.func
+  logoutUser: PropTypes.func,
+  clearErrors: PropTypes.func,
+  error: PropTypes.string
 };
 
 function mapStateToProps(state) {
-  const { loggingIn } = state.authentication;
+  const { loggingIn, error } = state.authentication;
+
   return {
-    loggingIn
+    loggingIn,
+    error
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     loginUser: (email, password) =>
-      dispatch(userActions.login(email, password)),
-    logoutUser: () => dispatch(userActions.logout())
+      dispatch(authActions.login(email, password)),
+    logoutUser: () => dispatch(authActions.logout()),
+    clearErrors: () => dispatch(authActions.clearErrors())
   };
 };
 
